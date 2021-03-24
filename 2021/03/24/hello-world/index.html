@@ -1,0 +1,162 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密 | Tubring's Subway Station</title><meta name="keywords" content="小程序,加解密"><meta name="author" content="Tubring Yu"><meta name="copyright" content="Tubring Yu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="小程序中使用crypto-js进行AES&#x2F;ECB&#x2F;PACKS7Padding加密解密AES常用加密模式为 ECB 与 CBC，二者在使用上的区别为是否需要偏移量(iv) 安装crypto-js目前版本为4.+，但在实际使用中发现，安装最新版本时，若使用CBC模式加密，会报Native crypto module could not be used to get secure random numb">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小程序中使用crypto-js进行AES&#x2F;ECB&#x2F;PACKS7Padding加密解密">
+<meta property="og:url" content="https://tubring25.github.io/2021/03/24/hello-world/index.html">
+<meta property="og:site_name" content="Tubring&#39;s Subway Station">
+<meta property="og:description" content="小程序中使用crypto-js进行AES&#x2F;ECB&#x2F;PACKS7Padding加密解密AES常用加密模式为 ECB 与 CBC，二者在使用上的区别为是否需要偏移量(iv) 安装crypto-js目前版本为4.+，但在实际使用中发现，安装最新版本时，若使用CBC模式加密，会报Native crypto module could not be used to get secure random numb">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://tubring25.github.io/images/aes.jpg">
+<meta property="article:published_time" content="2021-03-24T01:45:09.000Z">
+<meta property="article:modified_time" content="2021-03-24T05:51:52.660Z">
+<meta property="article:author" content="Tubring Yu">
+<meta property="article:tag" content="小程序">
+<meta property="article:tag" content="加解密">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://tubring25.github.io/images/aes.jpg"><link rel="shortcut icon" href="/tubring25.github.io/img/favicon.png"><link rel="canonical" href="https://tubring25.github.io/2021/03/24/hello-world/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/tubring25.github.io/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/tubring25.github.io/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: Tubring Yu","link":"链接: ","source":"来源: Tubring's Subway Station","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"你已切换为繁体","cht_to_chs":"你已切换为简体","day_to_night":"你已切换为深色模式","night_to_day":"你已切换为浅色模式","bgLight":"#122E40","bgDark":"#E4EBF2","position":"bottom-left"},
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-03-24 13:51:52'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="/tubring25.github.io/img/hacked.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/tubring25.github.io/archives/"><div class="headline">文章</div><div class="length-num">1</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tubring25.github.io/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tubring25.github.io/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/tubring25.github.io/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tubring25.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tubring25.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/tubring25.github.io/categories/%E5%89%8D%E7%AB%AF/"><i class="fa-fw fas fa-code"></i><span> 前端</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/tubring25.github.io/images/aes.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/tubring25.github.io/">Tubring's Subway Station</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/tubring25.github.io/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/tubring25.github.io/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tubring25.github.io/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/tubring25.github.io/categories/%E5%89%8D%E7%AB%AF/"><i class="fa-fw fas fa-code"></i><span> 前端</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-03-24T01:45:09.000Z" title="发表于 2021-03-24 09:45:09">2021-03-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-03-24T05:51:52.660Z" title="更新于 2021-03-24 13:51:52">2021-03-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/tubring25.github.io/categories/%E5%89%8D%E7%AB%AF/">前端</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/tubring25.github.io/categories/%E5%89%8D%E7%AB%AF/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">381</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="小程序中使用crypto-js进行AES-ECB-PACKS7Padding加密解密"><a href="#小程序中使用crypto-js进行AES-ECB-PACKS7Padding加密解密" class="headerlink" title="小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密"></a>小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密</h1><p>AES常用加密模式为 <strong>ECB</strong> 与 <strong>CBC</strong>，二者在使用上的区别为是否需要偏移量(iv)</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><code>crypto-js</code>目前版本为<code>4.+</code>，但在实际使用中发现，安装最新版本时，若使用<strong>CBC</strong>模式加密，会报<code>Native crypto module could not be used to get secure random number.</code>错误，这个错误目前作者仍没有修复，在GitHub的issue上也没比较好的解决办法，姑使用<code>3.+</code>版本</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install crypto-js@<span class="number">3.9</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>项目中一般有<code>utils</code> 文件夹，在其中新建<code>crypto.js</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入crypto-js</span></span><br><span class="line"><span class="keyword">const</span> CryptoJS = <span class="built_in">require</span>(<span class="string">&#x27;crypto-js&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// crypto加密需要长度为16的密钥，且考虑到安全性密钥最好还是随机生成</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建密钥</span></span><br><span class="line"><span class="keyword">const</span> createAesKey =&gt; () &#123;</span><br><span class="line">  <span class="keyword">const</span> expect = <span class="number">16</span></span><br><span class="line">  <span class="keyword">let</span> str = <span class="built_in">Math</span>.random().toString(<span class="number">36</span>).substr(<span class="number">2</span>)</span><br><span class="line">  <span class="keyword">while</span> (str.length &lt; expect) &#123;</span><br><span class="line">	  str += <span class="built_in">Math</span>.random().toString(<span class="number">36</span>).substr(<span class="number">2</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  str = str.substr(<span class="number">0</span>, <span class="number">16</span>)</span><br><span class="line">  <span class="keyword">return</span> str</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 加密</span></span><br><span class="line"><span class="comment">// ECB模式不需要偏移量。如果选择加密模式为CBC，则还需要生成16位数的iv</span></span><br><span class="line"><span class="keyword">const</span> msgEncrypted =&gt; (word, key) &#123;</span><br><span class="line">  <span class="keyword">let</span> srcs = CryptoJS.enc.Utf8.parse(word);</span><br><span class="line">  <span class="keyword">let</span> kkey =  CryptoJS.enc.Utf8.parse(key)</span><br><span class="line">  <span class="keyword">let</span> encrypted = CryptoJS.AES.encrypt(srcs, kkey, &#123;<span class="attr">mode</span>: CryptoJS.mode.ECB, <span class="attr">padding</span>: CryptoJS.pad.Pkcs7 &#125;);</span><br><span class="line">  <span class="keyword">return</span> encrypted.ciphertext.toString().toUpperCase();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解密</span></span><br><span class="line"><span class="comment">// 解密模式同上，如果选择CBC，也需要传入相应的iv</span></span><br><span class="line"><span class="keyword">const</span> msgDecrypted =&gt; (content, key) &#123;</span><br><span class="line">  <span class="keyword">var</span> sKey = CryptoJS.enc.Utf8.parse(key);</span><br><span class="line">  <span class="keyword">var</span> decrypt = CryptoJS.AES.decrypt(content, sKey, &#123;<span class="attr">mode</span>:CryptoJS.mode.ECB,<span class="attr">padding</span>: CryptoJS.pad.Pkcs7&#125;);</span><br><span class="line">  <span class="keyword">let</span> deRes = <span class="built_in">JSON</span>.parse(CryptoJS.enc.Utf8.stringify(decrypt).toString())</span><br><span class="line">  <span class="keyword">return</span> deRes</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在使用时引用相应函数即可。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Tubring Yu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://tubring25.github.io/2021/03/24/hello-world/">https://tubring25.github.io/2021/03/24/hello-world/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://tubring25.github.io" target="_blank">Tubring's Subway Station</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tubring25.github.io/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a><a class="post-meta__tags" href="/tubring25.github.io/tags/%E5%8A%A0%E8%A7%A3%E5%AF%86/">加解密</a></div><div class="post_share"><div class="social-share" data-image="/tubring25.github.io/images/aes.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="/tubring25.github.io/img/hacked.jpg" onerror="this.onerror=null;this.src='/tubring25.github.io/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Tubring Yu</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/tubring25.github.io/archives/"><div class="headline">文章</div><div class="length-num">1</div></a></div><div class="card-info-data-item is-center"><a href="/tubring25.github.io/tags/"><div class="headline">标签</div><div class="length-num">2</div></a></div><div class="card-info-data-item is-center"><a href="/tubring25.github.io/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Tubring25"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/Tubring25" target="_blank" title="GitHub"><i class="fab fa-github"></i></a><a class="social-icon" href="/tubring25.github.io/tubring25@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://mobile.twitter.com/home" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%8F%E7%A8%8B%E5%BA%8F%E4%B8%AD%E4%BD%BF%E7%94%A8crypto-js%E8%BF%9B%E8%A1%8CAES-ECB-PACKS7Padding%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86"><span class="toc-number">1.</span> <span class="toc-text">小程序中使用crypto-js进行AES&#x2F;ECB&#x2F;PACKS7Padding加密解密</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">使用</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/tubring25.github.io/2021/03/24/hello-world/" title="小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密"><img src="/tubring25.github.io/images/aes.jpg" onerror="this.onerror=null;this.src='/tubring25.github.io/img/404.jpg'" alt="小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密"/></a><div class="content"><a class="title" href="/tubring25.github.io/2021/03/24/hello-world/" title="小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密">小程序中使用crypto-js进行AES/ECB/PACKS7Padding加密解密</a><time datetime="2021-03-24T01:45:09.000Z" title="发表于 2021-03-24 09:45:09">2021-03-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/tubring25.github.io/images/aes.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By Tubring Yu</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Life is crap, but the good news is, we're not alone.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/tubring25.github.io/js/utils.js"></script><script src="/tubring25.github.io/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
