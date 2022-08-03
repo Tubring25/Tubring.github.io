@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://tubring25.github.io/2022/08/03/Vue%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%8C%87%E5%8C%97/</loc>
+    <loc>https://tubring25.github.io/2021/10/04/Vue%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E6%8C%87%E5%8C%97/</loc>
     
     <lastmod>2022-08-03</lastmod>
     
@@ -89,6 +89,20 @@
   
   <url>
     <loc>https://tubring25.github.io/tags/Japanese/</loc>
+    <lastmod>2022-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://tubring25.github.io/tags/Vite/</loc>
+    <lastmod>2022-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://tubring25.github.io/tags/Vue-Unit-Test/</loc>
     <lastmod>2022-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
