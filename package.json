@@ -1,5 +1,5 @@
 {
-  "name": "nextra-blog-sample",
+  "name": "my-app",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,15 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@types/node": "20.5.1",
-    "@types/react": "18.2.20",
+    "@types/node": "20.5.4",
+    "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",
     "autoprefixer": "10.4.15",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.19",
     "next": "13.4.19",
-    "nextra": "^2.11.1",
-    "nextra-theme-blog": "^2.11.1",
     "postcss": "8.4.28",
     "react": "18.2.0",
     "react-dom": "18.2.0",
