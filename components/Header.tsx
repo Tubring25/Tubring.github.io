@@ -32,17 +32,11 @@ const Header = () => {
             <Link
               key={link.title}
               href={link.href}
-              className="sm:block font-medium text-gray-900 dark:text-gray-100"
+              className="btn-3d-inside font-medium hidden text-gray-900 dark:text-gray-100 dark:btn-3d-inside md:inline-block"
             >
               {link.title}
             </Link>
           ))}
-        <a
-          href="#_"
-          className="btn-3d relative px-3 py-2 overflow-hidden font-medium text-gray-600 bg-gray-100 rounded-lg"
-        >
-          Button Text
-        </a>
         <SearchButton />
         <ThemeSwitch />
         <MobileNav />

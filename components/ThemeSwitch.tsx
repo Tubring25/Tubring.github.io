@@ -17,13 +17,16 @@ const ThemeSwitch = () => {
   return (
     <button
       aria-label="Toggle Dark Mode"
+      className="icon-3d-inside dark:icon-3d-inside"
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
-        className="text-gray-900 dark:text-gray-100 h-6 w-6"
+        className={`text-gray-900 dark:text-gray-100 h-6 w-6 transition-transform duration-300 ${
+          mounted && theme === 'dark' ? 'rotate-180' : 'rotate-0'
+        }`}
       >
         {mounted && theme === 'dark' ? (
           <path
