@@ -24,8 +24,10 @@ const ThemeSwitch = () => {
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 20 20"
         fill="currentColor"
-        className={`text-gray-900 dark:text-gray-100 h-6 w-6 transition-transform duration-300 ${
-          mounted && theme === 'dark' ? 'rotate-180' : 'rotate-0'
+        className={`text-zinc-900 dark:text-zinc-100 h-6 w-6 transition-transform duration-300 ${
+          mounted && theme === 'dark'
+            ? 'rotate-180 dark:hover:text-yellow-500'
+            : 'rotate-0 hover:text-blue-500'
         }`}
       >
         {mounted && theme === 'dark' ? (

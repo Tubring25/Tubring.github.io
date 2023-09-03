@@ -38,6 +38,7 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           <Link
             href={currentPage - 1 === 1 ? `/${basePath}/` : `/${basePath}/page/${currentPage - 1}`}
             rel="prev"
+            className="hover:text-primary-500 transition delay-100 hover:-translate-x-2 duration-200"
           >
             Previous
           </Link>
@@ -51,7 +52,11 @@ function Pagination({ totalPages, currentPage }: PaginationProps) {
           </button>
         )}
         {nextPage && (
-          <Link href={`/${basePath}/page/${currentPage + 1}`} rel="next">
+          <Link
+            href={`/${basePath}/page/${currentPage + 1}`}
+            rel="next"
+            className=" hover:text-primary-500 transition delay-100 hover:translate-x-2 duration-200"
+          >
             Next
           </Link>
         )}
@@ -78,9 +83,9 @@ export default function ListLayout({
 
   return (
     <>
-      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+      <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
             {title}
           </h1>
           <div className="relative max-w-lg">
@@ -91,11 +96,11 @@ export default function ListLayout({
                 type="text"
                 onChange={(e) => setSearchValue(e.target.value)}
                 placeholder="Search articles"
-                className="block w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-900 dark:bg-gray-800 dark:text-gray-100"
+                className="block w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-primary-500 focus:ring-primary-500 dark:border-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
               />
             </label>
             <svg
-              className="absolute right-3 top-3 h-5 w-5 text-gray-400 dark:text-gray-300"
+              className="absolute right-3 top-3 h-5 w-5 text-zinc-400 dark:text-zinc-300"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -115,26 +120,29 @@ export default function ListLayout({
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (
-              <li key={path} className="py-4">
+              <li
+                key={path}
+                className="py-6 transition hover:rounded-xl hover:scale-105 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              >
                 <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                   <dl>
                     <dt className="sr-only">Published on</dt>
-                    <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                    <dd className="text-base font-medium leading-6 text-zinc-500 dark:text-zinc-400 px-6">
                       <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                     </dd>
                   </dl>
-                  <div className="space-y-3 xl:col-span-3">
+                  <div className="space-y-3 xl:col-span-3 px-6">
                     <div>
                       <h3 className="text-2xl font-bold leading-8 tracking-tight">
-                        <Link href={`/${path}`} className="text-gray-900 dark:text-gray-100">
+                        <Link href={`/${path}`} className="text-zinc-900 dark:text-zinc-100">
                           {title}
                         </Link>
                       </h3>
-                      <div className="flex flex-wrap">
+                      <div className="flex flex-wrap pt-3">
                         {tags?.map((tag) => <Tag key={tag} text={tag} />)}
                       </div>
                     </div>
-                    <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                    <div className="prose max-w-none text-zinc-500 dark:text-zinc-400">
                       {summary}
                     </div>
                   </div>

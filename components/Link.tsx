@@ -7,26 +7,16 @@ const CustomLink = ({ href, ...rest }: LinkProps & AnchorHTMLAttributes<HTMLAnch
   const isInternalLink = href && href.startsWith('/')
   const isAnchorLink = href && href.startsWith('#')
 
-  // const classNames = {
-  //   ""
-  // }
-
   if (isInternalLink) {
-    return <Link  className="hover:bg-zinc-400 text-cyan-300" href={href} {...rest} />
+    return <Link className=" text-sky-400" href={href} {...rest} />
   }
 
   if (isAnchorLink) {
-    return <a className="hover:bg-zinc-400 text-cyan-300" href={href} {...rest} />
+    return <a className=" text-sky-400" href={href} {...rest} />
   }
 
   return (
-    <a
-      className="hover:bg-zinc-400 text-cyan-300"
-      target="_blank"
-      rel="noopener noreferrer"
-      href={href}
-      {...rest}
-    />
+    <a className=" text-sky-400" target="_blank" rel="noopener noreferrer" href={href} {...rest} />
   )
 }
 

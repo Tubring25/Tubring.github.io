@@ -1,7 +1,7 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
   title: "Tubring's subway",
-  author: 'Tails Azimuth',
+  author: 'q-yu',
   headerTitle: 'TailwindBlog',
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',
@@ -37,11 +37,12 @@ const siteMetadata = {
     //   googleAnalyticsId: '', // e.g. G-XXXXXXX
     // },
   },
-  newsletter: {
-    // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
-    // Please add your .env file and modify it according to your selection
-    provider: 'buttondown',
-  },
+  newsletter: null,
+  // {
+  //   // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
+  //   // Please add your .env file and modify it according to your selection
+  //   provider: 'buttondown',
+  // },
   comments: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
