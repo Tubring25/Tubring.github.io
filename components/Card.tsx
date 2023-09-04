@@ -2,11 +2,11 @@ import Image from './Image'
 import Link from './Link'
 
 const Card = ({ title, description, imgSrc, href }) => (
-  <div className="md max-w-[544px] p-4 md:w-1/2">
+  <div className="md max-w-[544px] p-6 md:w-1/2 transition hover:rounded-xl hover:scale-105">
     <div
       className={`${
         imgSrc && 'h-full'
-      }  overflow-hidden rounded-xl border-2 border-zinc-200 border-opacity-50 dark:border-zinc-700`}
+      }  overflow-hidden rounded-xl border-2 border-zinc-200 border-opacity-50 dark:border-zinc-700 hover:shadow-xl dark:hover:drop-shadow-lg dark:hover:shadow-zinc-800`}
     >
       {imgSrc &&
         (href ? (
