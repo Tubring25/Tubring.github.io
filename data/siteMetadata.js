@@ -1,21 +1,18 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Qian-Yu',
+  title: 'Qian Yu',
   author: 'q-yu',
-  headerTitle: 'Qian-Yu',
+  headerTitle: 'Qian Yu',
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
-  siteRepo: 'https://github.com/timlrx/tailwind-nextjs-starter-blog',
+  siteUrl: 'https://vercel.com/tubring25/tubring25-github-io',
+  siteRepo: 'https://github.com/Tubring25/tubring25.github.io',
   siteLogo: '/static/images/logo.png',
   socialBanner: '/static/images/twitter-card.png',
-  mastodon: 'https://mastodon.social/@mastodonuser',
-  email: 'address@yoursite.com',
-  github: 'https://github.com',
-  twitter: 'https://twitter.com/Twitter',
-  facebook: 'https://facebook.com',
-  youtube: 'https://youtube.com',
+  email: 'tubring25@gmail.com',
+  github: 'https://github.com/Tubring25/tubring25.github.io',
+  twitter: 'https://twitter.com/Tubring25',
   linkedin: 'https://www.linkedin.com',
   locale: 'en-US',
   analytics: {
@@ -37,12 +34,11 @@ const siteMetadata = {
     //   googleAnalyticsId: '', // e.g. G-XXXXXXX
     // },
   },
-  newsletter: null,
-  // {
-  //   // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
-  //   // Please add your .env file and modify it according to your selection
-  //   provider: 'buttondown',
-  // },
+  newsletter: {
+    // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus
+    // Please add your .env file and modify it according to your selection
+    provider: 'buttondown',
+  },
   comments: {
     // If you want to use an analytics provider you have to add it to the
     // content security policy in the `next.config.js` file.
