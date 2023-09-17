@@ -122,7 +122,7 @@ export default function ListLayout({
             return (
               <li
                 key={path}
-                className="py-6 transition hover:rounded-xl hover:scale-105 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="py-6 transition hover:rounded-xl hover:scale-105 hover:bg-zinc-100 dark:hover:bg-zinc-900"
               >
                 <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                   <dl>

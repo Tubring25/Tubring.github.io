@@ -1,8 +1,8 @@
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: "Tubring's subway",
+  title: 'Qian-Yu',
   author: 'q-yu',
-  headerTitle: 'TailwindBlog',
+  headerTitle: 'Qian-Yu',
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',
   theme: 'system', // system, dark or light
