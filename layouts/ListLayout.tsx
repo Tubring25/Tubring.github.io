@@ -8,6 +8,7 @@ import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
+import tagData from 'app/tag-data.json'
 
 interface PaginationProps {
   totalPages: number
@@ -79,7 +80,9 @@ export default function ListLayout({
 
   // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts =
-    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
+    initialDisplayPosts.length > 0 && !searchValue
+      ? initialDisplayPosts.filter((post) => !post.tags.includes('Jap_Practice'))
+      : filteredBlogPosts
 
   return (
     <>
