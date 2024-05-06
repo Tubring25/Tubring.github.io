@@ -2,28 +2,33 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
-import NewsletterForm from 'pliny/ui/NewsletterForm'
+import { coreContent } from 'pliny/utils/contentlayer'
+import AuthorLayout from '@/layouts/AuthorLayout'
+import { MDXLayoutRenderer } from 'pliny/mdx-components'
+import { allAuthors, Authors } from 'contentlayer/generated'
 
 const MAX_DISPLAY = 5
 
 export default function Home({ posts }) {
+  const author = allAuthors.find((p) => p.slug === 'default') as Authors
+  const mainContent = coreContent(author)
   return (
     <>
+    <AuthorLayout content={mainContent}>
+        <MDXLayoutRenderer code={author.body.code} />
+      </AuthorLayout>
       <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-3xl sm:leading-10 md:text-4xl md:leading-14">
             Latest
           </h1>
-          <p className="text-lg leading-7 text-zinc-500 dark:text-zinc-400">
-            {siteMetadata.description}
-          </p>
         </div>
         <ul className="divide-y divide-zinc-200 dark:divide-zinc-700">
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags } = post
             return (
-              <li key={slug} className="py-12">
+              <li key={slug} className="py-5">
                 <article>
                   <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
                     <dl>
@@ -52,15 +57,6 @@ export default function Home({ posts }) {
                         <div className="prose max-w-none text-zinc-500 dark:text-zinc-400">
                           {summary}
                         </div>
-                      </div>
-                      <div className="text-base font-medium leading-6">
-                        <Link
-                          href={`/blog/${slug}`}
-                          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                          aria-label={`Read "${title}"`}
-                        >
-                          Read more &rarr;
-                        </Link>
                       </div>
                     </div>
                   </div>
