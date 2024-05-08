@@ -1,0 +1,66 @@
+---
+title: temp
+date: '2024-5-8'
+tags: ['TypeScript', 'Type Challenges', 'Frontend']
+draft: false
+summary: TypeChallenges: Pick
+---
+## はじめに
+このシーズンのblogは自身がTypeScriptを再学習した記録です。Type Challengesを練習することで、TypeScriptの基礎知識を復習しながら補充します。
+この記事の対象はTypeScript基礎知識は持っている初心者です。ゼロからの方は、TypeScriptの基本型、ユニオン型、InterfaceとTypeの相関概念を学習した後、この記事を読んでみてみてください。
+## [4. Pick](https://github.com/type-challenges/type-challenges/blob/main/questions/00004-easy-pick/README.md)
+```ts
+// Challenge
+import type { Equal, Expect } from './test-utils'
+type cases = [
+	Expect<Equal<Expected1, MyPick<Todo, 'title'>>>,
+	Expect<Equal<Expected2, MyPick<Todo, 'title' | 'completed'>>>,
+	// @ts-expect-error
+	MyPick<Todo, 'title' | 'completed' | 'invalid'>,
+]
+interface Todo {
+	title: string
+	description: string
+	completed: boolean
+}
+interface Expected1 {
+	title: string
+}
+interface Expected2 {
+	title: string
+	completed: boolean
+}
+
+// Answer
+type MyPick<T, K extends keyof T> = {
+	[P in K]: T[P]
+}
+```
+### 回答のアプローチ
+1. 汎用パラメータの定義：`MyPicK`には2つの汎用パラメータ、`T`と`K`が必要とします。ここで、`T`はオブジェクトタイプで表し、`K`はTの属性キーのユニオン型となります。`extends`を使用して、`K`が`T`のキーのサブセットであることを保証します。
+2. マッピング処理：マッピング型を使用して`K`内の各キーに対して繰り返し処理を行います。マッピング型の構文は`[P in K]`で、ここで`P`は`K`のユニオン型に含まれる各プロパティキーを表します。
+3. インデックスアクセス型：`T`内の各プロパティキー`P`に対して、`T[P]`を使用して対応する形を取得します。
+### 相関ポイント
+- **extends**：ジェネリック型や条件型などうで型の制約を定義する際に使用されます。`extends`を使用することで、特定の型のサブセットかどうかを指定したり、ある型が他の型に代入可能かをチェックすることができます。
+```ts
+// ジェネリック型で使用例
+function identity<T extends number>(arg: T):T {
+	return arg
+}
+
+// 条件型で使用例
+type IsString<T> = T extends string ? true : false
+
+type IsStringCheck1 = IsString<string>; // true
+type IsStringCheck2 = IsString<number>; // false
+```
+- **keyof**：TypeScriptのキーワードで、オブジェクト型の全てのキーを取得するために使用されます。取得結果は、それらのキーを文字列リテラルのユニオン型として表します。
+```ts
+inerface Person {
+	name: string;
+	age: number;
+	hasDriverLicense: boolean
+}
+
+type PersonKeys = keyof Person; // 'name' | 'age' | 'hasDriverLicense'
+```
