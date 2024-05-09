@@ -3,7 +3,7 @@ title: temp
 date: '2024-5-8'
 tags: ['TypeScript', 'Type Challenges', 'Frontend']
 draft: false
-summary: TypeChallenges: Pick
+summary: TypeChallenges: Pick, Readonly, Awaited
 ---
 ## はじめに
 このシーズンのblogは自身がTypeScriptを再学習した記録です。Type Challengesを練習することで、TypeScriptの基礎知識を復習しながら補充します。
@@ -63,4 +63,68 @@ inerface Person {
 }
 
 type PersonKeys = keyof Person; // 'name' | 'age' | 'hasDriverLicense'
+```
+## [7.Readonly](https://github.com/type-challenges/type-challenges/blob/main/questions/00007-easy-readonly/README.md#readonly----)
+```ts
+// ============= Test Cases =============
+type cases = [
+	Expect<Equal<MyReadonly<Todo1>, Readonly<Todo1>>>,
+]
+interface Todo1 {
+	title: string
+	description: string
+	completed: boolean
+	meta: {
+	author: string
+	}
+}
+// ============= Answer =============
+type MyReadonly<T> = {
+	readonly [P in keyof T]: T[P]
+}
+```
+### 解答アプローチ
+取得したいのタイプは処理前とキー及び型は全て同じですが、`readonly`修飾子を使用してオブジェクトのプロパティを読み取り専用に変更します。これを実現するたには、マッピング処理を利用して`readonly`修飾子各プロパティに追加します。
+
+## [189.Awaited](https://github.com/type-challenges/type-challenges/blob/main/questions/00189-easy-awaited/README.md)
+```ts
+// ============= Test Cases =============
+type X = Promise<string>
+type Y = Promise<{ field: number }>
+type Z = Promise<Promise<string | number>>
+type Z1 = Promise<Promise<Promise<string | boolean>>>
+type T = { then: (onfulfilled: (arg: number) => any) => any }
+
+type cases = [
+Expect<Equal<MyAwaited<X>, string>>,
+Expect<Equal<MyAwaited<Y>, { field: number }>>,
+Expect<Equal<MyAwaited<Z>, string | number>>,
+Expect<Equal<MyAwaited<Z1>, string | boolean>>,
+Expect<Equal<MyAwaited<T>, number>>,
+]
+// @ts-expect-error
+type error = MyAwaited<number>
+
+// ============= Answer =============
+type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer P> ?
+P extends PromiseLike<any> ? MyAwaited<P> : P : never
+```
+### 解答アプローチ
+1. 分析した例によれば、入力型は`Promise`だけじゃなくて、`then`を含む`Promise`に似た型も考慮に入れるべきであるため、入力型は`T extends PromiseLike<any>`を使用することが適切です。
+2. `PromiseLike`の内部内容の型を推定することが必要ですので、`infer P` を使います。
+3. 推定型`P`と内部構造がまだ`PromiseLike`型の可能性があるかため、内部構造まだチェックして、同じ`PromiseLike`型であれば、再帰的に処理を続けます。そして、`PromiseLike`型でない場合には、その型を返すようにします。
+### 相関ポイント
+- **PromiseLike**:`then`を持って、`Promise`の基本的な行為に似たオブジェクトです。
+```ts
+let promiseLike: PromiseLike<number> = {
+    then: () => {
+	    return onfulfilled(42);
+    }
+};
+promiseLike.then(value => console.log(value)); // 42
+```
+- **infer**:条件型内で使用されるキーワードです。型をダイナミックに推論するために使います
+```ts
+type ExtractPromiseType<T> = T extends PromiseLike<infer U> ? U : never;
+type ResolvedType = ExtractPromiseType<PromiseLike<string>>;　// string
 ```
