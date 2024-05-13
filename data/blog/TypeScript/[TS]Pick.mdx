@@ -128,3 +128,40 @@ promiseLike.then(value => console.log(value)); // 42
 type ExtractPromiseType<T> = T extends PromiseLike<infer U> ? U : never;
 type ResolvedType = ExtractPromiseType<PromiseLike<string>>;　// string
 ```
+
+## [898.Includes](https://github.com/type-challenges/type-challenges/blob/main/questions/00898-easy-includes/README.md)
+```ts
+// ============= Test Cases =============
+import type { Equal, Expect } from './test-utils'
+type cases = [
+Expect<Equal<Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana'], 'Kars'>, true>>,
+Expect<Equal<Includes<['Kars', 'Esidisi', 'Wamuu', 'Santana'], 'Dio'>, false>>,
+Expect<Equal<Includes<[1, 2, 3, 5, 6, 7], 7>, true>>,
+Expect<Equal<Includes<[1, 2, 3, 5, 6, 7], 4>, false>>,
+Expect<Equal<Includes<[1, 2, 3], 2>, true>>,
+Expect<Equal<Includes<[1, 2, 3], 1>, true>>,
+Expect<Equal<Includes<[{}], { a: 'A' }>, false>>,
+Expect<Equal<Includes<[boolean, 2, 3, 5, 6, 7], false>, false>>,
+Expect<Equal<Includes<[true, 2, 3, 5, 6, 7], boolean>, false>>,
+Expect<Equal<Includes<[false, 2, 3, 5, 6, 7], false>, true>>,
+Expect<Equal<Includes<[{ a: 'A' }], { readonly a: 'A' }>, false>>,
+Expect<Equal<Includes<[{ readonly a: 'A' }], { a: 'A' }>, false>>,
+Expect<Equal<Includes<[1], 1 | 2>, false>>,
+Expect<Equal<Includes<[1 | 2], 1>, false>>,
+Expect<Equal<Includes<[null], undefined>, false>>,
+Expect<Equal<Includes<[undefined], null>, false>>,
+]
+// ============= Answer =============
+type Includes<T extends readonly any[], U> = T extends [infer F, ...infer R] ?
+	Equal<U, F> extends true ? 
+		true 
+		: Includes<R, U> 
+	: false;
+```
+### 解答アプルーチ
+ `Include`型は、ある型が配列にあるかどうかチェックする方法です。
+ 1. 条件型：指定した型`T`は配列`T`の中で存在かどうかをチェックすると、条件型を使います。
+ 2. 配列分割:条件型おいて`T`が`[infer F, ...infer R]`の形状にマッチするかどうかでタプルを分解します。ここで、`F`はタプルの最初のヘッドで、`infer R`はそれ以外の要素を意味します。
+ 3. `Equal`：現在調べて要素`F`と`U`を比較するために、`Equal<F, U>`を使います。もしそれが`true`を拡張する場合、マッチが見つかったということで、最終に`true`を返します。
+ 4. 再帰：マッチ見つかれない場合は、タプルの残り部分は同じチェックを繰り返します。リストの次のアイテムをチェックして続け、マッチが見つかるか全てのアイテムを検索したまで続けます。
+ 5. ベースケース：もし`T`が`[infer F, infer R]`の構造とマッチしない場合、検索待ちアイテムがなくなったことを意味します。つまり全部の要素をチェックし終わったら、`U`がタプル内部で見つからなかったので、`false`を返します。
