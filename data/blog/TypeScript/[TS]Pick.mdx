@@ -1,5 +1,5 @@
 ---
-title: temp
+title: [TS]TypeChallengesからTypeScriptを復習しましょう_1
 date: '2024-5-8'
 tags: ['TypeScript', 'Type Challenges', 'Frontend']
 draft: false
@@ -85,6 +85,110 @@ type MyReadonly<T> = {
 ```
 ### 解答アプローチ
 取得したいのタイプは処理前とキー及び型は全て同じですが、`readonly`修飾子を使用してオブジェクトのプロパティを読み取り専用に変更します。これを実現するたには、マッピング処理を利用して`readonly`修飾子各プロパティに追加します。
+
+## [8.Readonly2](https://github.com/type-challenges/type-challenges/blob/main/questions/00008-medium-readonly-2/README.md)
+```ts
+type cases = [
+Expect<Alike<MyReadonly2<Todo1>, Readonly<Todo1>>>,
+Expect<Alike<MyReadonly2<Todo1, 'title' | 'description'>, Expected>>,
+Expect<Alike<MyReadonly2<Todo2, 'title' | 'description'>, Expected>>,
+Expect<Alike<MyReadonly2<Todo2, 'description' >, Expected>>,
+]
+// @ts-expect-error
+type error = MyReadonly2<Todo1, 'title' | 'invalid'>
+interface Todo1 {
+	title: string
+	description?: string
+	completed: boolean
+}
+interface Todo2 {
+	readonly title: string
+	description?: string
+	completed: boolean
+}
+interface Expected {
+	readonly title: string
+	readonly description?: string
+	completed: boolean
+}
+// ============= Answer =============
+type MyReadonly2<T, K extends keyof T = keyof T> = {
+	readonly [P in keyof T as P extends K ? P : never]: T[P]
+} & {
+	[P in keyof T as P extends K ? never : P]: T[P]
+}
+```
+### 解決アプローチ
+Readonly2は、オブジェクトのプロパティを読み取り専用にする型ですが、上記のReadonlyとの違いは、オプションとしてプロパティのキーの部分集合`K`を指定できる点です。指定した`K`のキーに対応するプロパティを読み取り専用にし、`K`が指定されていない場合は、全てのプロパティを読み取り専用にします。
+
+だから、Readonly2を実現するためには、以下の二つのステップです：
+1. 引数`K`はオブジェクト`T`のキーに存在するかをチェックします
+	- `K`が`T`のキーと互換性があるかどうかを `extends`を使用してチェックします。
+	-  `K　= keyof T` というデフォルト型指定は、`K`が特に指定されていない場合に`T`の全てのキーをデフォルト値として割り当てるために使われます。
+2. 読み取り専用にするプロパティとするしないプロパティを区別します
+	 - `P in keyof T as P extends K ? P : never` `T`とは、`T`のキー`P`を調べて、`P`が`K`に含まれていれば、それを読み取り専用にするキーとして扱います。含まれていなけてば、何もしません。
+	- `&`を使用して、読み取り専用にしないプロパティを組み合わせる際に、先ほどの判定を反転されたロジックを使います。
+## [9.DeepReadonly](https://github.com/type-challenges/type-challenges/blob/main/questions/00009-medium-deep-readonly/README.md)
+```ts
+type cases = [
+	Expect<Equal<DeepReadonly<X1>, Expected1>>,
+	Expect<Equal<DeepReadonly<X2>, Expected2>>,
+]
+type X1 = {
+	a: () => 22
+	b: string
+	c: {
+		d: boolean
+		e: {
+			g: {
+				h: {
+					i: true
+					j: 'string'
+					}
+				k: 'hello'
+			}
+			l: [
+				'hi',
+				{
+					m: ['hey']
+				},
+			]
+		}
+	}
+}
+type X2 = { a: string } | { b: number }
+type Expected1 = {
+	readonly a: () => 22
+	readonly b: string
+	readonly c: {
+	readonly d: boolean
+		readonly e: {
+			readonly g: {
+				readonly h: {
+					readonly i: true
+					readonly j: 'string'
+				}
+				readonly k: 'hello'
+			}
+			readonly l: readonly [
+				'hi',
+				{
+					readonly m: readonly ['hey']
+				},
+			]
+		}
+	}
+}
+type Expected2 = { readonly a: string } | { readonly b: number }
+// ============= ANSWER =============
+type DeepReadonly<T> = {
+	readonly [P in keyof T]: T[P] extends Function ? T[P] : DeepReadonly<T[P]>
+}
+```
+### 解答アプローチ
+`DeepReadonly`は、オブジェクト内の全てのプロパティを再起的に読み取り専用にするための方です。
+1. マッピング処理：`Readonly`と同様に、`T`の各キーに対していマッピングを行い、それらを読み取り専用にします。
+2. 条件型と関数のチェック：`T`のプロパティは大きく分けて三種類あります：プリミティブ型、関数型とオブジェクト型です。プリミティブ型と関数型のプロパティには単純に`readonly`を適用するだけで済みです。しかし、オブジェクト型は、そのプロパティ自体だけではなく内部の全てのプロパティも読み取り専用にする必要があります。そのため、プロパティが関数でない場合は、`T[P]`を再帰的に`DeepReadonly`を適用します。
 
 ## [189.Awaited](https://github.com/type-challenges/type-challenges/blob/main/questions/00189-easy-awaited/README.md)
 ```ts
