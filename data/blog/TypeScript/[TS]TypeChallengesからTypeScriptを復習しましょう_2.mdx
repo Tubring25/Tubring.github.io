@@ -1,0 +1,56 @@
+---
+title: [TS]TypeChallengesからTypeScriptを復習しましょう_2
+date: '2024-5-23'
+tags: ['TypeScript', 'Type Challenges', 'Frontend']
+draft: false
+summary: TypeChallenges: Pick, Readonly, Awaited
+---
+## [108.Trim](https://github.com/type-challenges/type-challenges/blob/main/questions/00108-medium-trim/README.md)
+```ts
+type cases = [
+Expect<Equal<Trim<'str'>, 'str'>>,
+Expect<Equal<Trim<' str'>, 'str'>>,
+Expect<Equal<Trim<' str'>, 'str'>>,
+Expect<Equal<Trim<'str '>, 'str'>>,
+Expect<Equal<Trim<' str '>, 'str'>>,
+Expect<Equal<Trim<' \n\t foo bar \t'>, 'foo bar'>>,
+Expect<Equal<Trim<''>, ''>>,
+Expect<Equal<Trim<' \n\t '>, ''>>,
+]
+// ============= Answer =============
+type Space = ' ' | '\n' | '\t'
+type Trim<S extends string> = 
+	S extends `${Space}${infer T}` | `${infer T}${Space}` ? 
+		Trim<T> : S
+```
+### 解答
+目標は文字列の両端にある空白を削除し、新しい文字列を返すことです。
+文字列は配列のように分割可能ので、`${Space}${infer T}`と`${infer T}${Space}`のパターンを使用してたんの空白を削除し、両端の空白がなくなるまで処理を再帰的に実施します。
+## [296.Permutation](https://github.com/type-challenges/type-challenges/blob/main/questions/00296-medium-permutation/README.md)
+```ts
+type cases = [
+	Expect<Equal<Permutation<'A'>, ['A']>>,
+	Expect<Equal<Permutation<'A' | 'B' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
+	Expect<Equal<Permutation<'B' | 'A' | 'C'>, ['A', 'B', 'C'] | ['A', 'C', 'B'] | ['B', 'A', 'C'] | ['B', 'C', 'A'] | ['C', 'A', 'B'] | ['C', 'B', 'A']>>,
+	Expect<Equal<Permutation<boolean>, [false, true] | [true, false]>>,
+	Expect<Equal<Permutation<never>, []>>,
+]
+// ============= Answer =============
+type Permutation<T, U = T> =[T] extends [never] ? 
+    [] :
+	T extends U ? [T, ...Permutation<Exclude<U, T>>] :
+	    never;
+```
+### 解答
+この問題を解決するには、二つのポイントを理解する必要があります。
+- 特殊コンディションの`never`の判定方法
+-  すべての配列を返す方法
+1. `never`の判定方法
+	`never`の判定するには、`[T] extends [never]`を使用します。これはジェネリック型`T`が`never`であるかどうかを直接比較するものです。
+1. すべての配列を返す方法
+	全ての配列返すには、再帰と条件型を使用します。`U`が指定されていない場合は、`T`の各キーが`U`のデフォルト値として使用されます。その状態で`T extends U`の判定を行うと、常に`true`にないます。次に今指定されたの`T`を取り除いて、残りのキーを並べ替えて再帰処理を行います。
+### 補足
+Tはneverを判定するについて、`T extends never`は無効です。
+- 分配条件型：TypeScriptでユニオン型の分配処理は、ユニオンの各メンバーに対して、チェック条件を適用します。例えば：T extends U | V の場合、TypeScriptはT extends U とT extends Vをチェックします。T extends neverの場合、TをユニオンタイプA | B | Cになると、ABCはneverではない、結果はfalseです
+- never型の特殊性：neverは空値を表して、どんな型と非常してもfalseを返します。これはT exends never常にfalseであることを意味します。\[\]はゼロの要数を含む配列を表します。　T extends never は Tはneverかどうかをチェックして、Tは空配列を判定することができません。
+- \[T\] exntends \[never\]を使用して、判定します。これは分配条件型じゃなくて、直接ジェネリック`T`が空値かどうか比較します。

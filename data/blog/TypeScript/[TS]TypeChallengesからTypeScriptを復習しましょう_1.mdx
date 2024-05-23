@@ -7,10 +7,10 @@ summary: TypeChallenges: Pick, Readonly, Awaited
 ---
 ## はじめに
 このシーズンのblogは自身がTypeScriptを再学習した記録です。Type Challengesを練習することで、TypeScriptの基礎知識を復習しながら補充します。
-この記事の対象はTypeScript基礎知識は持っている初心者です。ゼロからの方は、TypeScriptの基本型、ユニオン型、InterfaceとTypeの相関概念を学習した後、この記事を読んでみてみてください。
+この記事の対象はTypeScript基礎知識は持っている初心者です。ゼロからの方は、TypeScriptの基本型、ジェネリック型、ユニオン型、InterfaceとTypeの相関概念を学習した後、この記事を読んでみてください。
 ## [4. Pick](https://github.com/type-challenges/type-challenges/blob/main/questions/00004-easy-pick/README.md)
 ```ts
-// Challenge
+// ============= Test Cases =============
 import type { Equal, Expect } from './test-utils'
 type cases = [
 	Expect<Equal<Expected1, MyPick<Todo, 'title'>>>,
@@ -31,16 +31,16 @@ interface Expected2 {
 	completed: boolean
 }
 
-// Answer
+// ============= Answer =============
 type MyPick<T, K extends keyof T> = {
 	[P in K]: T[P]
 }
 ```
-### 回答のアプローチ
+### 解答
 1. 汎用パラメータの定義：`MyPicK`には2つの汎用パラメータ、`T`と`K`が必要とします。ここで、`T`はオブジェクトタイプで表し、`K`はTの属性キーのユニオン型となります。`extends`を使用して、`K`が`T`のキーのサブセットであることを保証します。
 2. マッピング処理：マッピング型を使用して`K`内の各キーに対して繰り返し処理を行います。マッピング型の構文は`[P in K]`で、ここで`P`は`K`のユニオン型に含まれる各プロパティキーを表します。
 3. インデックスアクセス型：`T`内の各プロパティキー`P`に対して、`T[P]`を使用して対応する形を取得します。
-### 相関ポイント
+### 補足
 - **extends**：ジェネリック型や条件型などうで型の制約を定義する際に使用されます。`extends`を使用することで、特定の型のサブセットかどうかを指定したり、ある型が他の型に代入可能かをチェックすることができます。
 ```ts
 // ジェネリック型で使用例
@@ -83,7 +83,7 @@ type MyReadonly<T> = {
 	readonly [P in keyof T]: T[P]
 }
 ```
-### 解答アプローチ
+### 解答
 取得したいのタイプは処理前とキー及び型は全て同じですが、`readonly`修飾子を使用してオブジェクトのプロパティを読み取り専用に変更します。これを実現するたには、マッピング処理を利用して`readonly`修飾子各プロパティに追加します。
 
 ## [8.Readonly2](https://github.com/type-challenges/type-challenges/blob/main/questions/00008-medium-readonly-2/README.md)
@@ -185,7 +185,7 @@ type DeepReadonly<T> = {
 	readonly [P in keyof T]: T[P] extends Function ? T[P] : DeepReadonly<T[P]>
 }
 ```
-### 解答アプローチ
+### 解答
 `DeepReadonly`は、オブジェクト内の全てのプロパティを再起的に読み取り専用にするための方です。
 1. マッピング処理：`Readonly`と同様に、`T`の各キーに対していマッピングを行い、それらを読み取り専用にします。
 2. 条件型と関数のチェック：`T`のプロパティは大きく分けて三種類あります：プリミティブ型、関数型とオブジェクト型です。プリミティブ型と関数型のプロパティには単純に`readonly`を適用するだけで済みです。しかし、オブジェクト型は、そのプロパティ自体だけではなく内部の全てのプロパティも読み取り専用にする必要があります。そのため、プロパティが関数でない場合は、`T[P]`を再帰的に`DeepReadonly`を適用します。
@@ -213,11 +213,11 @@ type error = MyAwaited<number>
 type MyAwaited<T extends PromiseLike<any>> = T extends PromiseLike<infer P> ?
 P extends PromiseLike<any> ? MyAwaited<P> : P : never
 ```
-### 解答アプローチ
+### 解答
 1. 分析した例によれば、入力型は`Promise`だけじゃなくて、`then`を含む`Promise`に似た型も考慮に入れるべきであるため、入力型は`T extends PromiseLike<any>`を使用することが適切です。
 2. `PromiseLike`の内部内容の型を推定することが必要ですので、`infer P` を使います。
 3. 推定型`P`と内部構造がまだ`PromiseLike`型の可能性があるかため、内部構造まだチェックして、同じ`PromiseLike`型であれば、再帰的に処理を続けます。そして、`PromiseLike`型でない場合には、その型を返すようにします。
-### 相関ポイント
+### 補足
 - **PromiseLike**:`then`を持って、`Promise`の基本的な行為に似たオブジェクトです。
 ```ts
 let promiseLike: PromiseLike<number> = {
@@ -232,7 +232,6 @@ promiseLike.then(value => console.log(value)); // 42
 type ExtractPromiseType<T> = T extends PromiseLike<infer U> ? U : never;
 type ResolvedType = ExtractPromiseType<PromiseLike<string>>;　// string
 ```
-
 ## [898.Includes](https://github.com/type-challenges/type-challenges/blob/main/questions/00898-easy-includes/README.md)
 ```ts
 // ============= Test Cases =============
@@ -262,10 +261,11 @@ type Includes<T extends readonly any[], U> = T extends [infer F, ...infer R] ?
 		: Includes<R, U> 
 	: false;
 ```
-### 解答アプルーチ
+### 解答
  `Include`型は、ある型が配列にあるかどうかチェックする方法です。
  1. 条件型：指定した型`T`は配列`T`の中で存在かどうかをチェックすると、条件型を使います。
  2. 配列分割:条件型おいて`T`が`[infer F, ...infer R]`の形状にマッチするかどうかでタプルを分解します。ここで、`F`はタプルの最初のヘッドで、`infer R`はそれ以外の要素を意味します。
  3. `Equal`：現在調べて要素`F`と`U`を比較するために、`Equal<F, U>`を使います。もしそれが`true`を拡張する場合、マッチが見つかったということで、最終に`true`を返します。
  4. 再帰：マッチ見つかれない場合は、タプルの残り部分は同じチェックを繰り返します。リストの次のアイテムをチェックして続け、マッチが見つかるか全てのアイテムを検索したまで続けます。
  5. ベースケース：もし`T`が`[infer F, infer R]`の構造とマッチしない場合、検索待ちアイテムがなくなったことを意味します。つまり全部の要素をチェックし終わったら、`U`がタプル内部で見つからなかったので、`false`を返します。
+ 
