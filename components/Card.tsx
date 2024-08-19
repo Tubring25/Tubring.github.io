@@ -6,7 +6,7 @@ const Card = ({ title, description, imgSrc, href }) => (
     <div
       className={`${
         imgSrc && 'h-full'
-      }  overflow-hidden rounded-xl border-2 border-zinc-200 border-opacity-50 dark:border-zinc-700 hover:shadow-xl dark:hover:drop-shadow-lg dark:hover:shadow-zinc-800 hover:bg-zinc-100 hover:dark:bg-zinc-900`}
+      }  overflow-hidden rounded-xl border-2 border-slate-200 border-opacity-50 dark:border-slate-700 hover:shadow-xl dark:hover:drop-shadow-lg dark:hover:shadow-slate-800 hover:bg-slate-100 hover:dark:bg-slate-900`}
     >
       {imgSrc &&
         (href ? (
@@ -38,7 +38,7 @@ const Card = ({ title, description, imgSrc, href }) => (
             title
           )}
         </h2>
-        <p className="prose mb-3 max-w-none text-zinc-500 dark:text-zinc-400">{description}</p>
+        <p className="prose mb-3 max-w-none text-slate-500 dark:text-slate-400">{description}</p>
         {href && (
           <Link
             href={href}

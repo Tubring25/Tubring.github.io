@@ -11,7 +11,7 @@ const Header = () => {
     <header className="flex items-center justify-between py-10">
       <div>
         <Link href="/" aria-label={siteMetadata.headerTitle}>
-          <div className="flex items-center justify-between text-primary-500">
+          <div className="flex items-center justify-between text-primary-700 dark:text-primary-300">
             <div className="hidden h-6 text-2xl font-semibold sm:block">
               {siteMetadata.headerTitle}
             </div>
@@ -25,7 +25,7 @@ const Header = () => {
             <Link
               key={link.title}
               href={link.href}
-              className="btn-3d-inside font-medium hidden text-zinc-900 dark:text-zinc-100 dark:btn-3d-inside md:inline-block hover:text-primary-500 dark:hover:text-primary-500"
+              className="font-medium hidden px-3 py-2 rounded-lg text-slate-900 transition duration-300 ease-in-out dark:text-slate-100 md:inline-block hover:text-primary-500 hover:bg-slate-100 dark:hover:text-primary-700 dark:hover:bg-slate-200"
             >
               {link.title}
             </Link>

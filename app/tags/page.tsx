@@ -12,9 +12,9 @@ export default async function Page() {
   const sortedTags = tagKeys.sort((a, b) => tagCounts[b] - tagCounts[a])
   return (
     <>
-      <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
+      <div className="divide-y divide-slate-200 dark:divide-slate-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
             Tags
           </h1>
         </div>
@@ -22,11 +22,11 @@ export default async function Page() {
           {tagKeys.length === 0 && 'No tags found.'}
           {sortedTags.map((t) => {
             return (
-              <div key={t} className="mb-2 mr-5 mt-2 btn-3d-full dark:btn-3d-full">
+              <div key={t} className="mb-2 mr-5 mt-2 btn-3d-full dark:btn-3d-full text-primary-500 hover:text-primary-800 dark:hover:text-primary-300">
                 <Tag text={t} />
                 <Link
                   href={`/tags/${slug(t)}`}
-                  className="-ml-2 text-sm font-semibold uppercase text-zinc-600 dark:text-zinc-300"
+                  className="-ml-2 text-sm font-semibold uppercase"
                   aria-label={`View posts tagged ${t}`}
                 >
                   {` (${tagCounts[t]})`}

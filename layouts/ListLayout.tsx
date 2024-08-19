@@ -8,8 +8,8 @@ import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import tagData from 'app/tag-data.json'
 
+const DEFAULT_IMAGES = ['city.jpg', 'jinjia.jpg', 'kyoto.jpg', 'osaka.jpg', 'shinjuku.jpg', 'tokyo.jpg']
 interface PaginationProps {
   totalPages: number
   currentPage: number
@@ -78,32 +78,26 @@ export default function ListLayout({
     return searchContent.toLowerCase().includes(searchValue.toLowerCase())
   })
 
-  // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts =
-    initialDisplayPosts.length > 0 && !searchValue
-      ? initialDisplayPosts.filter((post) => !post.tags.includes('Jap_Practice'))
-      : filteredBlogPosts
+    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
 
   return (
     <>
-      <div className="divide-y divide-zinc-200 dark:divide-zinc-700">
+      <div className="divide-y divide-slate-200 dark:divide-slate-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-slate-900 dark:text-slate-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
             {title}
           </h1>
           <div className="relative max-w-lg">
-            <label>
-              <span className="sr-only">Search articles</span>
-              <input
-                aria-label="Search articles"
-                type="text"
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder="Search articles"
-                className="block w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-zinc-900 focus:border-primary-500 focus:ring-primary-500 dark:border-zinc-900 dark:bg-zinc-800 dark:text-zinc-100"
-              />
-            </label>
+            <input
+              aria-label="Search articles"
+              type="text"
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search articles"
+              className="block w-full rounded-md border border-slate-300 bg-white px-4 py-2 text-slate-900 focus:border-primary-500 focus:ring-primary-500 dark:border-slate-500 dark:bg-slate-800 dark:text-slate-100"
+            />
             <svg
-              className="absolute right-3 top-3 h-5 w-5 text-zinc-400 dark:text-zinc-300"
+              className="absolute right-3 top-3 h-5 w-5 text-slate-400 dark:text-slate-300"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -118,37 +112,50 @@ export default function ListLayout({
             </svg>
           </div>
         </div>
-        <ul>
+        <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-8">
           {!filteredBlogPosts.length && 'No posts found.'}
           {displayPosts.map((post) => {
-            const { path, date, title, summary, tags } = post
+            const { slug, date, title, summary, tags, images } = post
             return (
-              <li
-                key={path}
-                className="py-6 transition hover:rounded-xl hover:scale-105 hover:bg-zinc-100 dark:hover:bg-zinc-900"
-              >
-                <article className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                  <dl>
-                    <dt className="sr-only">Published on</dt>
-                    <dd className="text-base font-medium leading-6 text-zinc-500 dark:text-zinc-400 px-6">
-                      <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                    </dd>
-                  </dl>
-                  <div className="space-y-3 xl:col-span-3 px-6">
-                    <div>
-                      <h3 className="text-2xl font-bold leading-8 tracking-tight">
-                        <Link href={`/${path}`} className="text-zinc-900 dark:text-zinc-100">
-                          {title}
-                        </Link>
-                      </h3>
-                      <div className="flex flex-wrap pt-3">
-                        {tags?.map((tag) => <Tag key={tag} text={tag} />)}
-                      </div>
+              <li key={slug} className="flex">
+                <article className="flex flex-col justify-between w-full h-min-[26rem] p-4 rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-4 hover:bg-slate-200 hover:dark:bg-slate-900 hover:shadow-lg">
+                  <header>
+                    <div className="aspect-w-16 aspect-h-9 mb-4">
+                      <img
+                        src={images && images.length > 0 ? images[0] : `/static/images/default/${DEFAULT_IMAGES[Math.floor(Math.random() * DEFAULT_IMAGES.length)]}`}
+                        alt={title}
+                        className="object-cover w-full rounded-lg md:max-h-40 lg:max-h-60"
+                      />
                     </div>
-                    <div className="prose max-w-none text-zinc-500 dark:text-zinc-400">
+                    <h2 className="text-xl font-bold leading-8 tracking-tight line-clamp-2 mb-2">
+                      <Link
+                        href={`/blog/${slug}`}
+                        className="text-slate-900 dark:text-slate-100"
+                      >
+                        {title}
+                      </Link>
+                    </h2>
+                  </header>
+
+                  <div className="flex-grow overflow-hidden">
+                    <div className="prose max-w-none text-sm text-slate-500 dark:text-slate-400 line-clamp-4">
                       {summary}
                     </div>
                   </div>
+
+                  <footer className="">
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      {tags.map((tag) => (
+                        <Tag key={tag} text={tag} />
+                      ))}
+                    </div>
+                    <dl>
+                      <dt className="sr-only">Published on</dt>
+                      <dd className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                        <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                      </dd>
+                    </dl>
+                  </footer>
                 </article>
               </li>
             )

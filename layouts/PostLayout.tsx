@@ -33,17 +33,20 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
   const { filePath, path, slug, date, title, tags } = content
   const basePath = path.split('/')[0]
 
+  
+  console.log('posts', content)
+
   return (
     <SectionContainer>
       <ScrollTopAndComment />
       <article>
-        <div className="xl:divide-y xl:divide-zinc-200 xl:dark:divide-zinc-700">
+        <div className="xl:divide-y xl:divide-slate-200 xl:dark:divide-slate-700">
           <header className="pt-6 xl:pb-6">
             <div className="space-y-1 text-center">
               <dl className="space-y-10">
                 <div>
                   <dt className="sr-only">Published on</dt>
-                  <dd className="text-base font-medium leading-6 text-zinc-500 dark:text-zinc-400">
+                  <dd className="text-base font-medium leading-6 text-slate-500 dark:text-slate-400">
                     <time dateTime={date}>
                       {new Date(date).toLocaleDateString(siteMetadata.locale, postDateTemplate)}
                     </time>
@@ -55,8 +58,8 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               </div>
             </div>
           </header>
-          <div className="grid-rows-[auto_1fr] divide-y divide-zinc-200 pb-8 dark:divide-zinc-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
-            <dl className="pb-10 pt-6 xl:border-b xl:border-zinc-200 xl:pt-11 xl:dark:border-zinc-700">
+          <div className="grid-rows-[auto_1fr] divide-y divide-slate-200 pb-8 dark:divide-slate-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
+            <dl className="pb-10 pt-6 xl:border-b xl:border-slate-200 xl:pt-11 xl:dark:border-slate-700">
               <dt className="sr-only">Authors</dt>
               <dd>
                 <ul className="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
@@ -73,7 +76,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                       )}
                       <dl className="whitespace-nowrap text-sm font-medium leading-5">
                         <dt className="sr-only">Name</dt>
-                        <dd className="text-zinc-900 dark:text-zinc-100">{author.name}</dd>
+                        <dd className="text-slate-900 dark:text-slate-100">{author.name}</dd>
                         <dt className="sr-only">Twitter</dt>
                         <dd>
                           {author.twitter && (
@@ -91,9 +94,9 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                 </ul>
               </dd>
             </dl>
-            <div className="divide-y divide-zinc-200 dark:divide-zinc-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
+            <div className="divide-y divide-slate-200 dark:divide-slate-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
               <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">{children}</div>
-              {/* <div className="pb-6 pt-6 text-sm text-zinc-700 dark:text-zinc-300">
+              <div className="pb-6 pt-6 text-sm text-slate-700 dark:text-slate-300">
                 <Link href={discussUrl(path)} rel="nofollow">
                   Discuss on Twitter
                 </Link>
@@ -102,18 +105,18 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
               </div>
               {siteMetadata.comments && (
                 <div
-                  className="pb-6 pt-6 text-center text-zinc-700 dark:text-zinc-300"
+                  className="pb-6 pt-6 text-center text-slate-700 dark:text-slate-300"
                   id="comment"
                 >
                   <Comments slug={slug} />
                 </div>
-              )} */}
+              )}
             </div>
             <footer>
-              <div className="divide-zinc-200 text-sm font-medium leading-5 dark:divide-zinc-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
+              <div className="divide-slate-200 text-sm font-medium leading-5 dark:divide-slate-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
                 {tags && (
                   <div className="py-4 xl:py-8">
-                    <h2 className="text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                    <h2 className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                       Tags
                     </h2>
                     <div className="flex flex-wrap">
@@ -127,7 +130,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                   <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
                     {prev && prev.path && (
                       <div>
-                        <h2 className="text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                        <h2 className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                           Previous Article
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
@@ -137,7 +140,7 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
                     )}
                     {next && next.path && (
                       <div>
-                        <h2 className="text-xs uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                        <h2 className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                           Next Article
                         </h2>
                         <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">

@@ -25,11 +25,11 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
       <article>
         <div>
           <header>
-            <div className="space-y-1 border-b border-zinc-200 pb-10 text-center dark:border-zinc-700">
+            <div className="space-y-1 border-b border-slate-200 pb-10 text-center dark:border-slate-700">
               <dl>
                 <div>
                   <dt className="sr-only">Published on</dt>
-                  <dd className="text-base font-medium leading-6 text-zinc-500 dark:text-zinc-400">
+                  <dd className="text-base font-medium leading-6 text-slate-500 dark:text-slate-400">
                     <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
                   </dd>
                 </div>
@@ -39,12 +39,12 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
               </div>
             </div>
           </header>
-          <div className="grid-rows-[auto_1fr] divide-y divide-zinc-200 pb-8 dark:divide-zinc-700 xl:divide-y-0">
-            <div className="divide-y divide-zinc-200 dark:divide-zinc-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
+          <div className="grid-rows-[auto_1fr] divide-y divide-slate-200 pb-8 dark:divide-slate-700 xl:divide-y-0">
+            <div className="divide-y divide-slate-200 dark:divide-slate-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
               <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">{children}</div>
             </div>
             {siteMetadata.comments && (
-              <div className="pb-6 pt-6 text-center text-zinc-700 dark:text-zinc-300" id="comment">
+              <div className="pb-6 pt-6 text-center text-slate-700 dark:text-slate-300" id="comment">
                 <Comments slug={slug} />
               </div>
             )}

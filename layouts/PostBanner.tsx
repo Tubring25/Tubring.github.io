@@ -27,7 +27,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
       <ScrollTopAndComment />
       <article>
         <div>
-          <div className="space-y-1 pb-10 text-center dark:border-zinc-700">
+          <div className="space-y-1 pb-10 text-center dark:border-slate-700">
             <div className="w-full">
               <Bleed>
                 <div className="aspect-[2/1] w-full relative">
@@ -41,7 +41,7 @@ export default function PostMinimal({ content, next, prev, children }: LayoutPro
           </div>
           <div className="prose max-w-none py-4 dark:prose-invert">{children}</div>
           {/* {siteMetadata.comments && (
-            <div className="pb-6 pt-6 text-center text-zinc-700 dark:text-zinc-300" id="comment">
+            <div className="pb-6 pt-6 text-center text-slate-700 dark:text-slate-300" id="comment">
               <Comments slug={slug} />
             </div>
           )} */}
