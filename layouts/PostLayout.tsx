@@ -33,7 +33,6 @@ export default function PostLayout({ content, authorDetails, next, prev, childre
   const { filePath, path, slug, date, title, tags } = content
   const basePath = path.split('/')[0]
 
-  
   console.log('posts', content)
 
   return (

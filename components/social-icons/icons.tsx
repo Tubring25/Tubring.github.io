@@ -38,7 +38,6 @@ export function Mail(svgProps: SVGProps<SVGSVGElement>) {
 
 export function Twitter(svgProps: SVGProps<SVGSVGElement>) {
   return (
-
     <svg
       viewBox="0 0 24 24"
       width="24"

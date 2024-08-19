@@ -9,7 +9,14 @@ import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 
-const DEFAULT_IMAGES = ['city.jpg', 'jinjia.jpg', 'kyoto.jpg', 'osaka.jpg', 'shinjuku.jpg', 'tokyo.jpg']
+const DEFAULT_IMAGES = [
+  'city.jpg',
+  'jinjia.jpg',
+  'kyoto.jpg',
+  'osaka.jpg',
+  'shinjuku.jpg',
+  'tokyo.jpg',
+]
 interface PaginationProps {
   totalPages: number
   currentPage: number
@@ -122,16 +129,19 @@ export default function ListLayout({
                   <header>
                     <div className="aspect-w-16 aspect-h-9 mb-4">
                       <img
-                        src={images && images.length > 0 ? images[0] : `/static/images/default/${DEFAULT_IMAGES[Math.floor(Math.random() * DEFAULT_IMAGES.length)]}`}
+                        src={
+                          images && images.length > 0
+                            ? images[0]
+                            : `/static/images/default/${
+                                DEFAULT_IMAGES[Math.floor(Math.random() * DEFAULT_IMAGES.length)]
+                              }`
+                        }
                         alt={title}
                         className="object-cover w-full rounded-lg md:max-h-40 lg:max-h-60"
                       />
                     </div>
                     <h2 className="text-xl font-bold leading-8 tracking-tight line-clamp-2 mb-2">
-                      <Link
-                        href={`/blog/${slug}`}
-                        className="text-slate-900 dark:text-slate-100"
-                      >
+                      <Link href={`/blog/${slug}`} className="text-slate-900 dark:text-slate-100">
                         {title}
                       </Link>
                     </h2>

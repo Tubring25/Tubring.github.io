@@ -7,7 +7,14 @@ import AuthorLayout from '@/layouts/AuthorLayout'
 import { allAuthors, Authors } from 'contentlayer/generated'
 
 const MAX_DISPLAY = 6
-const DEFAULT_IMAGES = ['city.jpg', 'jinjia.jpg', 'kyoto.jpg', 'osaka.jpg', 'shinjuku.jpg', 'tokyo.jpg']
+const DEFAULT_IMAGES = [
+  'city.jpg',
+  'jinjia.jpg',
+  'kyoto.jpg',
+  'osaka.jpg',
+  'shinjuku.jpg',
+  'tokyo.jpg',
+]
 
 export default function Home({ posts }) {
   const author = allAuthors.find((p) => p.slug === 'default') as Authors
@@ -20,7 +27,9 @@ export default function Home({ posts }) {
           <h1 className="text-2xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
             Welcome
           </h1>
-          <h3 className='font-normal text-lg'>Hello!👋 I'm {mainContent.name}. Currently living in Tokyo. 🇯🇵</h3>
+          <h3 className="font-normal text-lg">
+            Hello!👋 I'm {mainContent.name}. Currently living in Tokyo. 🇯🇵
+          </h3>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
             Front-end developer passionate about user-friendly interfaces and open-source projects.
             Driven by creativity and an insatiable curiosity.
@@ -43,7 +52,13 @@ export default function Home({ posts }) {
                   <header>
                     <div className="aspect-w-16 aspect-h-9 mb-4">
                       <img
-                        src={images && images.length > 0 ? images[0] : `/static/images/default/${DEFAULT_IMAGES[Math.floor(Math.random() * DEFAULT_IMAGES.length)]}`}
+                        src={
+                          images && images.length > 0
+                            ? images[0]
+                            : `/static/images/default/${
+                                DEFAULT_IMAGES[Math.floor(Math.random() * DEFAULT_IMAGES.length)]
+                              }`
+                        }
                         alt={title}
                         className="object-cover w-full h-full rounded-lg max-h-[10rem]"
                       />
@@ -51,19 +66,19 @@ export default function Home({ posts }) {
                     <h2 className="text-xl font-bold leading-8 tracking-tight line-clamp-2 mb-2 text-slate-900 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-200">
                       <Link
                         href={`/blog/${slug}`}
-                        className='text-slate-900 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-200'
+                        className="text-slate-900 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-200"
                       >
                         {title}
                       </Link>
                     </h2>
                   </header>
-                  
+
                   {/* <div className="flex-grow overflow-hidden">
                     <div className="prose max-w-none text-sm text-slate-500 dark:text-slate-400 line-clamp-4">
                       {summary}
                     </div>
                   </div> */}
-                  
+
                   <footer className="mt-4">
                     <div className="flex flex-wrap gap-2 mb-2">
                       {tags.map((tag) => (

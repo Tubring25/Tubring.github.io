@@ -44,7 +44,10 @@ export default function PostLayout({ content, next, prev, children }: LayoutProp
               <div className="prose max-w-none pb-8 pt-10 dark:prose-invert">{children}</div>
             </div>
             {siteMetadata.comments && (
-              <div className="pb-6 pt-6 text-center text-slate-700 dark:text-slate-300" id="comment">
+              <div
+                className="pb-6 pt-6 text-center text-slate-700 dark:text-slate-300"
+                id="comment"
+              >
                 <Comments slug={slug} />
               </div>
             )}

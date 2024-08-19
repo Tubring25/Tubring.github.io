@@ -16,7 +16,8 @@ export default function Footer() {
         </div>
         <div className="mb-2 flex space-x-2 text-slate-500 dark:text-slate-400">
           {/* eslint-disable-next-line prettier/prettier */}
-          Tokyo at<MemoTimeDisplay />
+          Tokyo at
+          <MemoTimeDisplay />
         </div>
       </div>
     </footer>
