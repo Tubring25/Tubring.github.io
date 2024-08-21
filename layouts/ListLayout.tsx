@@ -125,7 +125,7 @@ export default function ListLayout({
             const { slug, date, title, summary, tags, images } = post
             return (
               <li key={slug} className="flex">
-                <article className="flex flex-col justify-between w-full h-min-[26rem] p-4 rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-4 hover:bg-slate-200 hover:dark:bg-slate-900 hover:shadow-lg">
+                <article className="flex flex-col justify-between w-full p-4 rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-4 hover:bg-slate-200 hover:dark:bg-slate-900 hover:shadow-lg">
                   <header>
                     <div className="aspect-w-16 aspect-h-9 mb-4">
                       <img
@@ -140,7 +140,7 @@ export default function ListLayout({
                         className="object-cover w-full rounded-lg md:max-h-40 lg:max-h-60"
                       />
                     </div>
-                    <h2 className="text-xl font-bold leading-8 tracking-tight line-clamp-2 mb-2">
+                    <h2 className="text-xl font-bold leading-8 tracking-tight mb-2">
                       <Link href={`/blog/${slug}`} className="text-slate-900 dark:text-slate-100">
                         {title}
                       </Link>

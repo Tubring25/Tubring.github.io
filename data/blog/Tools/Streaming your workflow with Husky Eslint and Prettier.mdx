@@ -1,0 +1,115 @@
+---
+title: Streaming your workflow with Husky, Eslint and Prettier
+date: '2024-8-21'
+tags: ['Husky', 'Git', 'Eslint', 'Prettier']
+draft: false
+images: ['/static/images/banner/husky.jpg']
+---
+
+## Introduction
+Maintaining code quality consistency is curcial for both team and indie developers. It ensures code is readable, reduces bugs, and makes future updates easier. 
+
+For teams, it improves collaboration, while for indie developers, it saves time and effort, leading to more reliable software.
+
+**Husky**, **Eslit** and **Prettier** are essential tools for ensuring code quality and consistency. While ESlint and Prettier are commonly used in daily development, with plenty of articles available to help get stared, today we'll focus on **Husky**.
+
+**Husky** helps user enforce code quality by runs scripts like test or linters automatically before commits, preventing issues from entering the codebase. 
+
+Let's dive it.
+
+## Setting Up Husky
+### Prerequisites
+Since the **Husky** is installed using `npm` I'll assume you already have the Node.js and project with npm/yarn/pnpm. You will also need a Git repository initialized. If you haven't done that yet, run the following command in your root directory. 
+```
+git init
+```
+
+### Installing Husky
+Install husky by running the following command: 
+```
+npm install husky -D
+```
+Enable Git hooks:
+```
+npx husky install
+```
+To automatically enable Git hooks after installing, update `package.json` with the following command: 
+```
+npm pkg set scripts.prepare="husky install"
+```
+The commands will create a `.husky` folder in your root directory with a `.pre-commit` file.
+
+The generated `pre-commit` hook looks like this:
+```
+#!/usr/bin/env sh  
+. "$(dirname -- "$0")/_/husky.sh"  
+  
+npm test
+```
+## Integrating Husky with ESLint and Prettier
+By default, only `npm test` runs before commit, which typically just check for basic issues. But what if we want to automatically format our code and fix linting errrors before committing? This is where **lint-staged** comes in.
+
+In short, this tool [runs linters on git staged files.](https://github.com/lint-staged/lint-staged?tab=readme-ov-file#-lint-staged).
+
+ Let's take a look of how to use it.
+1. Update the `pre-commit` :
+```
+	npx lint-staged
+```
+
+2. Config `package.json` :
+```
+"lint-staged": {
+	"*.{ts,tsx}": [
+		"prettier --write",
+		"eslint ."
+	]
+}
+```
+
+This setup will match all staged files with the extensions of `.ts` and `.tsx`. I used Prettier to enforce code styles and automatically fix errors, while ESlint checks code quaility on the matched files.
+
+## Linting Commit Message
+A clear commit message is essential for maintaining a clean and understandable project history.
+Properly formatted commit message help to find specific information more easily in the future.
+We can enforce commit message styles using **commitlint**
+
+Start by running the following command:
+```
+npx husky add .husky/commit-msg 'npx --no -- commitlint --edit $1'
+```
+This will created a `commit-msg` file with content of `npx --no -- commitlint --edit $1`.
+
+Next, install the necessary `commitlint` packages:
+```
+npm install @commitlint/config-conventional @commitlint/cli -D
+```
+
+Then create a `.commitlintrc.json` file in the root directory with the following content:
+```
+{
+	"extends": ["@commitlint/config-conventional"],	
+	"rules": {
+		"type-enum": [2, "always", ["ci", "chore", "docs", "ticket","feat", "fix", "perf", "refactor", "revert", "style"]]
+	}
+}
+```
+
+Explanation of configurations:
+1. **type commit**: Enforces a specific set of commit types.
+2. **2**: Severity level, with 2 indicating an error.
+3. **always**: Ensures the rules are enforced.
+4. **Commit Types**: The allowed commit types include: `ci`, `chore`, `docs`, `ticket`, `feat`, `fix`, `perf`, `refactor`, `revert`, and `style`.
+
+Let's checkout the result:
+```
+git commit -m "invalid commit"
+```
+![Inappropriate Commit Message](/static/images/blogs/huksy-errorcommit.png "Inappropriate Commit Message")
+
+The commit message should be under the rules of [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
+Ok, That's all, we got it!
+
+Enjoy a smoother, more reliable development workflow!
+

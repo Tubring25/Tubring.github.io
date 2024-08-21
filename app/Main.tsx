@@ -48,7 +48,7 @@ export default function Home({ posts }) {
             const { slug, date, title, summary, tags, images } = post
             return (
               <li key={slug} className="flex">
-                <article className="flex flex-col justify-between w-full h-[26rem] p-4 rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-4 hover:bg-slate-200 hover:dark:bg-slate-200 hover:shadow-lg">
+                <article className="flex flex-col justify-between w-full p-4 rounded-lg transition-all duration-300 ease-in-out hover:-translate-y-4 hover:bg-slate-200 hover:dark:bg-slate-200 hover:shadow-lg">
                   <header>
                     <div className="aspect-w-16 aspect-h-9 mb-4">
                       <img
@@ -60,10 +60,10 @@ export default function Home({ posts }) {
                               }`
                         }
                         alt={title}
-                        className="object-cover w-full h-full rounded-lg max-h-[10rem]"
+                        className="object-cover w-full h-full rounded-lg"
                       />
                     </div>
-                    <h2 className="text-xl font-bold leading-8 tracking-tight line-clamp-2 mb-2 text-slate-900 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-200">
+                    <h2 className="text-xl font-bold leading-8 tracking-tight mb-2 text-slate-900 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-200">
                       <Link
                         href={`/blog/${slug}`}
                         className="text-slate-900 dark:text-slate-200 hover:text-slate-900 dark:hover:text-slate-200"
@@ -72,12 +72,6 @@ export default function Home({ posts }) {
                       </Link>
                     </h2>
                   </header>
-
-                  {/* <div className="flex-grow overflow-hidden">
-                    <div className="prose max-w-none text-sm text-slate-500 dark:text-slate-400 line-clamp-4">
-                      {summary}
-                    </div>
-                  </div> */}
 
                   <footer className="mt-4">
                     <div className="flex flex-wrap gap-2 mb-2">
