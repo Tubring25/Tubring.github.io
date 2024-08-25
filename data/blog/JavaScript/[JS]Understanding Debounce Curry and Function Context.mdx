@@ -1,0 +1,130 @@
+---
+title: JS_Understanding Debounce, Curry and Function Context
+date: '2024-8-25'
+tags: ['Curry', 'Debounce', 'JavaScript Essentials']
+draft: false
+images: ['/static/images/banner/jsessentials.jpg']
+---
+
+## Introduce
+The concepts of closures and `this` have always tripped me up. Even now, I sometimes struggle to keep them straight. So, I figured the best way to really get them is by putting them into practice. If you're like me and find these concepts a bit confusing, I hope this article helps us both get a better grasp on them.
+
+We'll dive into **Debounce** and **Curry** by implementing them step-by-step. Along the way, we'll see how closures capture variables, how `this` behaves in different situations, and how the `apply/call/bind` allow us to control function invocation.
+
+## Understand Closures
+### What is closures
+Closures are one of the tricker concepts in JavaScript. I tried to explain it as simple as possible, there are plenty of great articles to introduce closures, if you want to know more deeply, I recommand you to read them. 
+
+Closures is a function that "remember" the environment in which it was created.This means that even after the outer function has finished executing, the inner function still has access to the variables from the outer function's scope.
+### How closures work
+Let's look at an example to make this clearer.
+```javascript
+function outer() {
+	let count = 0
+	function inner () {
+		count++
+		console.log(count)
+	}
+	return inner
+}
+
+let innerFunc = outer()
+
+innerFunc() // 1
+```
+In this example, the `inner` is a closure because it captures the variable `count` from `outer` function's scope. Even though `outer` has finished running, the `inner` still has access to `count` when it's called later. 
+## Implement Debounce
+Debounce typically works by using `setTimeout` to delay the execution of a function. If the function is triggered again before the delay, the timer will be reseted. This way, the function only runs once after the events have stopped firing for a specified period.
+### Step-by-Step Implementation of Debounce Using Closures
+```javascript
+function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+const user = {
+	name: 'Y',
+	printMyInfo: function (age) {
+		console.log(`Hello! My name is ${this.name}. I'm ${age} years old.`)
+	}
+}
+
+const debouncedNamePrint = debounce(user.printMyInfo.bing(user), 3000)
+debouncedNamePrint(30) // My name is: Y
+```
+
+So, let break it down.
+
+First, We define a variable `timeoutId` to keep track of the `setTimeout`. If the function is called again before the daly period ends, `clearTimeout(timeoutId)` will cancel the previous timer.
+
+Next, Debounce need to  return a function. This new function need to clear any existing timeout to reset the delay, and set a new timeout to invoke  `func` after the specified period. This is where the closures come into play: the returned function still has the access to the `timeoutId`.
+
+## Understand Curry
+Currying transforms a function into a sequence of functions, each function takes a single argument at a time, rather than taking all arguments at once.
+
+**Simple Example**
+```javascript
+function currySum(a) {
+	return function(b) {
+		return function(c) {
+			return a + b + c
+		}
+	}
+}
+```
+From this example, we could see how currying and closures work together. Each function returned in the sequence has access to the arguments that had received.
+## Implement Curry
+Now that we understand the basics of curry, let's see how to implement a simple curry function.
+
+```javascript
+// implement
+function curry(fn) {
+	return function curried(...args) {
+		if(args.length >= fn.length) {
+			return fn.call(this, ...args)
+		}
+		return curried.bind(this, ...args)
+	}
+}
+
+// example
+function multiply(a, b, c) {
+	console.log(a * b * c)
+}
+
+const curriedMuti = curry(multiply)
+
+curriedMuti(2)(3)(4) // 24
+```
+First, we define a `curry` function that takes another function `fn` as its argument. Inside this function, we create a new function named `curried` that collects the arguments passed to it.
+
+Next, check arguments
+- `fn.length`: represents the number of arguments that `fn` expects.
+- `args.length`: represents the total number of arguments collected so far. 
+
+- If `fn.length` equals to or greater than `args.length`, it means we've gathered enough arguments to call `fn`. Then invoke the `fn` with `args` and return the result.
+- If there are not enough arguments yet, we return another function. This function will collect more arguments, combining them with the previous arguments, and call `curried` again with the updated list of arguments.
+## Apply `apply`, `call` and `bind`
+In the examples above, we used `apply`, `call` and `bind` to control the context(`this`) in which a function is executed. Here is a quick breakdown of the differences between them.
+
+```javascript
+// apply
+func.apply(thisArg, [argsArray])
+// call
+func.call(thisArg, arg1, arg2, arg3, ...)
+// bind
+const boundFunc = func.bind(thisArg, arg1, arg2, ...)
+```
+
+That will be pretty clearly. The common part is that the first argument is always the thisArg. And the different part is below:
+- `apply`: arguments are provided as an array.
+- `call`: arguments are provided individually.
+- `bind`: arguments are provided individually and return a new function.
+
+
+
+Ok, That's all we got, Happy coding!
