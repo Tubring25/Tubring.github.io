@@ -1,7 +1,8 @@
 ---
 title: JS_Understanding Debounce, Curry and Function Context
 date: '2024-8-25'
-tags: ['Curry', 'Debounce', 'JavaScript Essentials']
+tags: ['JavaScript']
+summary: “In this article, we will dive into Debounce and Curry by implementing them step-by-step. Along the way, we'll see how closures capture variables, how `this` behaves in different situations, and how the `apply/call/bind` allow us to control function invocation.”
 draft: false
 images: ['/static/images/banner/jsessentials.jpg']
 ---
@@ -13,7 +14,7 @@ We'll dive into **Debounce** and **Curry** by implementing them step-by-step. Al
 
 ## Understand Closures
 ### What is closures
-Closures are one of the tricker concepts in JavaScript. I tried to explain it as simple as possible, there are plenty of great articles to introduce closures, if you want to know more deeply, I recommand you to read them. 
+Closures are one of the tricker concepts in JavaScript. I tried to explain it as simple as possible, there are plenty of great articles to introduce closures, if you want to know more deeply, I recommend you to read them. 
 
 Closures is a function that "remember" the environment in which it was created.This means that even after the outer function has finished executing, the inner function still has access to the variables from the outer function's scope.
 ### How closures work
