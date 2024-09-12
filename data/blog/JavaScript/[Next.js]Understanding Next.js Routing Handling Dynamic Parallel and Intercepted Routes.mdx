@@ -6,8 +6,213 @@ tags: ['Next.js', 'Next.js Routing']
 summary: 'In this article, we will dive into Next.js routing and see how to use layout and template, how to handle dynamic, parallel, and intercepted routes.'
 draft: true
 ---
+
 ## Preface
-This is article is mainly about the [Next.js(14.x) Routing](https://nextjs.org/docs/app/building-your-application/routing), it won't cover everything, but it will involve some parts that are relatively difficult for me to understand. I think there might be someone has the same confusion with me, so I write this to hope this will help us.
-### Target Reader
-This article is neither a complete tutorial from 0 nor require extensive development experience. You only need a very basic understanding of Next.js, even if it's just creating an initial project with `npx create-next-app@latest`.
-## Introduction
+
+### Why I Write This
+
+Recently, I've been diving into Next.js(14+) and creating some demo projects to practice. The file-system based router is new to me. While it's easy to grasp the basics, I found myself spending some time to understanding advanced features like Parallel Routes and Intercepting Routes.
+
+This articel primarily focuses on [Next.js(14.x) Routing](https://nextjs.org/docs/app/building-your-application/routing). While it won't cover everything, it will delve into some aspects that I found a little challenging to understand. I figured there might be others out there with similar confusions, so I'm writing this in hopes of helping us all out.
+
+### Who This Is For
+
+This article isn't a complete beginner's guide, nor does it require extensive development experience. You only need a basic understanding of Next.js - even if it's just creating an initial project with `npx create-next-app@latest`.
+
+Assuming you already know that Next.js uses a file-system based router, I'll skip the basics and jump straight to the Dynamic Routes section.
+
+## Dynamic Routes
+
+### What Are Dynamic Routes?
+
+Dynamic routes allow us to create pages that can adapt to different paramaters in the URL. We can use a single dynamic route to handle mutiple scenarios.
+
+### Creating Dynamic Routes
+
+The creating of dynamic routes is quite simple, just adding brackets to a page file name. For example:
+
+```
+app/post/[slug]/page.tsx
+```
+
+This creates a dynamic route for blog posts where `[slug]` can be any value.
+
+### Accessing Route Parameters
+
+Inside the page component, we can access the dynamic part of the route using the `params` prop. Here's a quice example:
+
+```typescript
+// app\post\[slug]\page.tsx
+export default async function BlogPost({ params }: { params: { slug: string } }) {
+  const post = await getBlogPost(params.slug)
+  return (
+    <article>
+      <h1>{post.title}</h1>
+      <div>{{ post.content }}</div>
+    </article>
+  )
+}
+```
+
+### Catch-All Routes and Optional Catch-All Routes
+
+The dynamic routes we created earlier use `[foldername]` and accept one paramater in the page component. But what if we need mutiple dynamic router paramaters? For instance, a structure like `app/shop/[category]/[id]/page.js`. This is where Catch-All Routes and Optional Catch-All Routes come in handy.
+
+#### Catch-All Routes
+
+Next.js offers catch-all routes using `[...folderName]`. This allow us to capture mutiple path segments. For example:
+
+```
+app/shop/[...slug]/page.js
+```
+
+This route could match:
+
+- `/shop/clothes`
+
+- `/shop/clothes/shirts`
+
+- `/shop/clothes/shirts/summer`
+
+```typescript
+// app\dynamic-routes\catch-all\[...slug]\page.tsx
+export default function DRCatchAllPage({ params }: { params: { slug: string[] } }) {
+    const { slug } = params
+    return (
+        <div className="text-center">
+            Current Page is Dynamic Route Page with Catch-all Segments.
+
+            {/* slug will be an array: ['clothes', 'shirts', 'summer'] */}
+            <h1>Category: {slug.join(' > ')}</h1>
+        </div>
+    )
+}
+```
+
+// TODO: add capture
+
+#### Optional Catch-All Routes
+
+   By adding double brackets, we can make catch-all routes optional:
+
+```
+app/shop/[[...slug]]/page.js
+```
+
+- `/shop`
+
+- `/shop/clothes`
+
+- `/shop/clothes/shirts/summer`
+  
+  The difference is that this route could work without paramaters.
+
+```typescript
+// app\dynamic-routes\optional-catch-all\shop\[[...slug]]\page.tsx
+
+export default function DROptCatchAllPage({ params }: { params: { slug?: string[] } }) {
+    return (
+        <div className="text-center">
+            Current Page is Dynamic Route Page with Optional Catch-all Segments.
+            <br />
+            The param info is: {params.slug ? params.slug.join('>') : 'empty info'}
+        </div>
+    )
+}
+```
+
+// TODO: add capture
+
+## Intercepting Routes
+
+Sometimes we hope we could pause and redirect a user before they reach a certain page. Next.js provides the intercepting routes to achieve this.
+
+### What Are Intercepting Routes
+
+Intercepting routes in Next.js give use the power to "intercept" a route and display a different component or page than what would normaly be displayed.
+
+### How to Create Intercepting Routes
+
+```
+intercepting-routes/
+├── feed/
+│   └── page.js
+└── photos/
+    ├── [...slug]/
+    │   └── page.js
+    └── (.)feed/
+        └── page.js
+```
+
+In this structure, `(.)feed` is an intercepting route. The `(.)` means "intercept the sibling route".
+
+### Types of Interceptions
+
+Next.js offers different types of interceptions:
+
+1. `(.)` - Intercept the same segment
+
+2. `(..)` - Intercept the parent segment
+
+3. `(...)` - Intercept from the root
+
+4. `(...)` - Intercept all segments
+   
+   ### 
+
+## Parallel Routes
+
+Imagine you're cooking in your kitchen. You've got pasta boiling on the burner and bread in the oven. That's kind of what paralle routes are like in Next.js - mutiple things happening at once, but all part of the same meal (or in our case, web page).
+
+### What Are Parallel Routes
+
+Parallel routes in Next.js allow us to render mutiple pages or components in the same layout simultaneously.
+
+### How to Create Parallel Routes
+
+Creating parallel routes need to add a `@` symbol in front of the foldername. For example:
+
+```
+parallel-routes/
+│── layout.tsx
+│── @pasta/
+│   └── page.tsx
+│── @bread/
+│   └── page.tsx
+```
+
+In this setup, both the `@pasta` and `@bread` components can be rendered side by side in the same layout.
+
+> Note: Folder name with names starting with `@` are called "slots", They won't be recognized as routes even if they contain a `page.tsx` file.
+
+To implement parallel routes, besides naming folders with `@` symbol, the `layout.tsx` file need to receive them as parameters, similar to how it receives `children`.
+
+```typescript
+export default function ParallelRoutesLayout({
+  children,
+  pasta,
+  bread,
+}: {
+  children: React.ReactNode
+  bread: React.ReactNode
+  pasta: React.ReactNode
+}) {
+  return (
+    <>
+      {children}
+      <div className="flex text-center">
+        <div className="w-1/2 p-4">
+          <h1 className="text-2xl font-bold mb-4">pasta Side</h1>
+          {pasta}
+        </div>
+        <div className="w-1/2 p-4">
+          <h1 className="text-2xl font-bold mb-4">bread Side</h1>
+          {bread}
+        </div>
+      </div>
+    </>
+  )
+}
+```
+
+The parallel routes and regular components has many things in common, but the biggest difference I think is the parallel routes come with route-like capabilities. Like loading states, error handling and default fallbacks, witch you'd have to implement manually with regular components.
