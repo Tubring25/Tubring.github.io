@@ -1,0 +1,97 @@
+---
+title: '[AtCoder] B - Fenwick Tree'
+date: '2024-10-20'
+tags: ['JavaScript', 'Algorithm', 'AtCoder']
+summary: 'In this article, we will dive into the Fenwick Tree algorithm and see how to implement it in JavaScript.'
+draft: false
+---
+
+問題リンク：[B - Fenwick Tree (atcoder.jp)](https://atcoder.jp/contests/practice2/tasks/practice2_b)
+
+## 問題分析
+クエリ操作：
+- `0 p x`：$a_p ← a_p + x$ 　$a_p$の値を更新します。
+- `1 l r`：$a_l$から$a_r$までの累加し出力します。
+以上の要求によって、Fenwickツリーを作成します。
+
+## 基本概念
+Fenwick Tree（別名：Binary Indexed Tree）は元の配列の特定の範囲の合計を効率的に管理するデータ構造です。これにより、元配列の累積和を高速に計算することができます。
+
+![Fenwick Tree](/static/images/blogs/fenwick_tree.png 'Fenwick Tree')
+
+- 元配列：$a[1]$~$a[8]$
+- Fenwick Treeで管理する配列：$c[1]$~$c[8]$
+定義により、$c[x]$の値は区間$[x - lowbit(x) + 1, x]$ の累積和を表します。ここで、$\text{lowbit}(x)$ は $x$の最下位ビットを表します。
+
+> $lowbit$の計算：`lowbit(x) = x & -x`
+
+任意の区間$[l,r]$の累積和を求める場合、以下の計算で得られます。
+$\sum_{i=l}^r a[i] = \text{sum}(r) - \text{sum}(l-1)$
+## 解法
+
+### Fenwick Treeの初期化
+入力情報に基づき、長さを1増やした配列を作成します。これは、Fenwick Treeでは通常1-basedの配列を使用するためです。入力配列の各要素について、Fenwick Treeの対応するノードを更新します。
+```javascript
+constructor(arr) {
+	this.tree = new Array(arr.length + 1).fill(0)
+	for(let i = 0; i < arr.length; i++) {
+		this.update(i, arr[i])
+	}
+}
+```
+### 更新
+1. インデックスの変換
+	通常の0-basedインデックスを、Fenwick Treeで使用する1-basedインデックスに変換します。具体的には、インデックスに1を加えます。
+2. 有効性の確認
+	変換後のインデックスがFenwick Tree配列の長さ以下である場合、そのノードは有効であり、更新対象となります。
+3. 累積和の更新
+	有効ノードに対して、そのノードが担当する区間の累積和を更新します。
+4. 次のノードの移動
+	Fenwick Treeの特性により、次に更新すべきノードのインデックスは以下の式で求められます。
+	$x = x + \text{lowbit}(x)$
+5. 繰り返し処理
+	ステップ4で計算した新しインデックスを用いて、ステップ2から4を繰り返します。これにより、影響を受けるすべてのノードが更新されます。
+```javascript
+update(i, delta){
+	i++
+	while(i < this.tree.length) {
+		this.tree[i] += delta
+		i += i & -i
+	}
+}
+```
+
+### 累積和
+$a[i]$の和を求めることは、$c[1,i]$内の各区間の総和を求めることと同じです。Fenwick Treeの特性を利用して、各区間の和を攻略累積することができます。
+$a[l]$ から $a[r]$ までの区間和を求める場合、$c[1,r]$ と $c[1,l-1]$ の差を計算することで得られます。
+```javascript
+sum(i) {
+	let sum = 0
+	while(i > 0) {
+		sum += this.tree[i]
+		i -= i & -i
+	}
+	return sum
+}
+
+rangeSum(a, b) {
+	return this.sum(b) - this.sum(a)
+}
+```
+### メイン処理
+```javascript
+function Main(input) {
+  const readLine = input.trim().split('\n').map(x => x.split(" ",).map(Number));
+  const result = []
+  const [[N, Q], array, ...opts] = readLine
+  const ft = new FenWickTree(array)
+  for(let i = 0; i < Q; i++) {
+    const [t, l, r] = opts[i]
+    if(t === 0) {
+      ft.update(l, r)
+    } else {
+      result.push(ft.rangeSum(l, r))
+    }
+  }
+  console.log(result.join("\n"));
+}
